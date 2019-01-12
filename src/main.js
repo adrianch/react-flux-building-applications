@@ -1,18 +1,18 @@
-"use strict";
 
-var React = require('react');
-var ReactDom = require('react-dom');
-var ReactRouter = require('react-router-dom');
-var App = require('./components/app');
 
-var Router = ReactRouter.BrowserRouter;
-var Route = ReactRouter.Route;
-var InitializeActions = require('./actions/initializeActions');
+const React = require('react');
+const ReactDom = require('react-dom');
+const ReactRouter = require('react-router-dom');
+const App = require('./components/app');
+
+const Router = ReactRouter.BrowserRouter;
+const Route = ReactRouter.Route;
+const InitializeActions = require('./actions/initializeActions');
 
 InitializeActions.initApp();
 
 ReactDom.render(
-    <Router>
-        <Route path="/" component={App} />
-    </Router>, document.getElementById('app')
+  <Router>
+    <Route path="/" component={App} />
+  </Router>, document.getElementById('app'),
 );

@@ -1,37 +1,37 @@
-"use strict";
 
-var Dispatcher = require('../dispatcher/appDispatcher');
-var AuthorApi = require('../api/authorApi');
-var ActionTypes = require('../constants/actionTypes');
 
-var AuthorActions = {
-	createAuthor: function(author) {
-		var newAuthor = AuthorApi.saveAuthor(author);
+const Dispatcher = require('../dispatcher/appDispatcher');
+const AuthorApi = require('../api/authorApi');
+const ActionTypes = require('../constants/actionTypes');
 
-		//Hey dispatcher, go tell all the stores that an author was just created.
-		Dispatcher.dispatch({
-			actionType: ActionTypes.CREATE_AUTHOR,
-			author: newAuthor
-		});
-	},
+const AuthorActions = {
+  createAuthor(author) {
+    const newAuthor = AuthorApi.saveAuthor(author);
 
-	updateAuthor: function(author) {
-		var updatedAuthor = AuthorApi.saveAuthor(author);
+    // Hey dispatcher, go tell all the stores that an author was just created.
+    Dispatcher.dispatch({
+      actionType: ActionTypes.CREATE_AUTHOR,
+      author: newAuthor,
+    });
+  },
 
-		Dispatcher.dispatch({
-			actionType: ActionTypes.UPDATE_AUTHOR,
-			author: updatedAuthor
-		});
-	},
+  updateAuthor(author) {
+    const updatedAuthor = AuthorApi.saveAuthor(author);
 
-	deleteAuthor: function(id) {
-		AuthorApi.deleteAuthor(id);
+    Dispatcher.dispatch({
+      actionType: ActionTypes.UPDATE_AUTHOR,
+      author: updatedAuthor,
+    });
+  },
 
-		Dispatcher.dispatch({
-			actionType: ActionTypes.DELETE_AUTHOR,
-			id: id
-		});
-	}
+  deleteAuthor(id) {
+    AuthorApi.deleteAuthor(id);
+
+    Dispatcher.dispatch({
+      actionType: ActionTypes.DELETE_AUTHOR,
+      id,
+    });
+  },
 };
 
 module.exports = AuthorActions;

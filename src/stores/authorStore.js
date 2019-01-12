@@ -1,61 +1,60 @@
-"use strict";
+import EventEmitter from 'events';
 
-var Dispatcher = require('../dispatcher/appDispatcher');
-var ActionTypes = require('../constants/actionTypes');
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
-var _ = require('lodash');
-var CHANGE_EVENT = 'change';
+const assign = require('object-assign');
+const _ = require('lodash');
+const ActionTypes = require('../constants/actionTypes');
+const Dispatcher = require('../dispatcher/appDispatcher');
 
-var _authors = [];
+const CHANGE_EVENT = 'change';
 
-var AuthorStore = assign({}, EventEmitter.prototype, {
-	addChangeListener: function(callback) {
-		this.on(CHANGE_EVENT, callback);
-	},
+let authors = [];
 
-	removeChangeListener: function(callback) {
-		this.removeListener(CHANGE_EVENT, callback);
-	},
+const AuthorStore = assign({}, EventEmitter.prototype, {
+  addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
 
-	emitChange: function() {
-		this.emit(CHANGE_EVENT);
-	},
+  removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  },
 
-	getAllAuthors: function() {
-		return _authors;
-	},
+  emitChange() {
+    this.emit(CHANGE_EVENT);
+  },
 
-	getAuthorById: function(id) {
-		return _.find(_authors, {id: id});
-	}
+  getAllAuthors() {
+    return authors;
+  },
+
+  getAuthorById(id) {
+    return _.find(authors, { id });
+  },
 });
 
-Dispatcher.register(function(action) {
-	switch(action.actionType) {
-		case ActionTypes.INITIALIZE:
-			_authors = action.initialData.authors;
-			AuthorStore.emitChange();
-			break;
-		case ActionTypes.CREATE_AUTHOR:
-			_authors.push(action.author);
-			AuthorStore.emitChange();
-			break;
-		case ActionTypes.UPDATE_AUTHOR:
-			var existingAuthor = _.find(_authors, {id: action.author.id});
-			var existingAuthorIndex = _.indexOf(_authors, existingAuthor); 
-			_authors.splice(existingAuthorIndex, 1, action.author);
-			AuthorStore.emitChange();
-			break;	
-		case ActionTypes.DELETE_AUTHOR:
-			_.remove(_authors, function(author) {
-				return action.id === author.id;
-			});
-			AuthorStore.emitChange();
-			break;
-		default:
-			// no op
-	}
+Dispatcher.register((action) => {
+  switch (action.actionType) {
+    case ActionTypes.INITIALIZE:
+      authors = action.initialData.authors;
+      AuthorStore.emitChange();
+      break;
+    case ActionTypes.CREATE_AUTHOR:
+      authors.push(action.author);
+      AuthorStore.emitChange();
+      break;
+    case ActionTypes.UPDATE_AUTHOR:
+      const existingAuthor = _.find(authors, { id: action.author.id });
+      const existingAuthorIndex = _.indexOf(authors, existingAuthor);
+      authors.splice(existingAuthorIndex, 1, action.author);
+      AuthorStore.emitChange();
+      break;
+    case ActionTypes.DELETE_AUTHOR:
+      _.remove(authors, author => action.id === author.id);
+      AuthorStore.emitChange();
+      break;
+    default:
+      // no op
+      break;
+  }
 });
 
 module.exports = AuthorStore;

@@ -1,40 +1,42 @@
-"use strict";
 
-var React = require('react');
-var createReactClass = require('create-react-class');
-var PropTypes = require('prop-types');
-var Input = require('../common/textInput');
 
-var AuthorForm = createReactClass({
-	propTypes: {
-		author:	PropTypes.object.isRequired,
-		onSave:	PropTypes.func.isRequired,
-		onChange: PropTypes.func.isRequired,
-		errors: PropTypes.object
-	},
+const React = require('react');
+const createReactClass = require('create-react-class');
+const PropTypes = require('prop-types');
+const Input = require('../common/textInput');
 
-	render: function() {
-		return (
-			<form>
-				<h1>Manage Author</h1>
-				<Input
-					name="firstName"
-					label="First Name"
-					value={this.props.author.firstName}
-					onChange={this.props.onChange}
-					error={this.props.errors.firstName} />
+const AuthorForm = createReactClass({
+  propTypes: {
+    author:	PropTypes.object.isRequired,
+    onSave:	PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    errors: PropTypes.object,
+  },
 
-				<Input
-					name="lastName"
-					label="Last Name"
-					value={this.props.author.lastName}
-					onChange={this.props.onChange}
-					error={this.props.errors.lastName} />
+  render() {
+    return (
+      <form>
+        <h1>Manage Author</h1>
+        <Input
+          name="firstName"
+          label="First Name"
+          value={this.props.author.firstName}
+          onChange={this.props.onChange}
+          error={this.props.errors.firstName}
+        />
 
-				<input type="submit" value="Save" className="btn btn-primary" onClick={this.props.onSave} />
-			</form>
-		);
-	}
+        <Input
+          name="lastName"
+          label="Last Name"
+          value={this.props.author.lastName}
+          onChange={this.props.onChange}
+          error={this.props.errors.lastName}
+        />
+
+        <input type="submit" value="Save" className="btn btn-primary" onClick={this.props.onSave} />
+      </form>
+    );
+  },
 });
 
 module.exports = AuthorForm;
