@@ -1,6 +1,11 @@
 {
-  "ecmaFeatures": {
-    "jsx": true
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "env": {
     "browser": true,
@@ -17,7 +22,7 @@
     "no-lone-blocks": 0
   },
   "globals": {
-    jQuery: true,
-    $: true
+    "jQuery": true,
+    "$": true
   }
 }

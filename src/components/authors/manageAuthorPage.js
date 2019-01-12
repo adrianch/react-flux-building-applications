@@ -1,46 +1,36 @@
 "use strict";
 
 var React = require('react');
-var Router = require('react-router');
+var createReactClass = require('create-react-class');
+var ReactRouter = require('react-router-dom');
 var AuthorForm = require('./authorForm');
 var AuthorActions = require('../../actions/authorActions');
 var AuthorStore = require('../../stores/authorStore');
-var toastr = require('toastr');
 
-var ManageAuthorPage = React.createClass({
-	mixins: [
-		Router.Navigation
-	],
+var Redirect = ReactRouter.Redirect;
+var Prompt = ReactRouter.Prompt;
 
-	statics: {
-		willTransitionFrom: function(transition, component) {
-			if (component.state.dirty && !confirm('Leave without saving?')) {
-				transition.abort();
-			}
-		}
-	},
-
+var ManageAuthorPage = createReactClass({
 	getInitialState: function() {
 		return {
 			author: { id: '', firstName: '', lastName: '' },
 			errors: {},
-			dirty: false
+			dirty: false,
+			redirect: false
 		};
 	},
 
-	componentWillMount: function() {
-		var authorId = this.props.params.id; //from the path '/author:id'
+	componentDidMount: function() {
+		var authorId = this.props.match.params.id; //from the path '/author:id'
 		if (authorId) {
 			this.setState({author: AuthorStore.getAuthorById(authorId) });
 		}
 	},
 
 	setAuthorState: function(event) {
-		this.setState({dirty: true});
-		var field = event.target.name;
-		var value = event.target.value;
-		this.state.author[field] = value;
-		return this.setState({author: this.state.author});
+		var author = Object.assign({}, this.state.author);
+		author[event.target.name] = event.target.value;
+		this.setState({author: author, dirty: true});
 	},
 
 	authorFormIsValid: function() {
@@ -74,18 +64,21 @@ var ManageAuthorPage = React.createClass({
 			AuthorActions.createAuthor(this.state.author);
 		}
 		
-		this.setState({dirty: false});
-		toastr.success('Author saved.');
-		this.transitionTo('authors');
+		this.setState({dirty: false, redirect: true});
+		// TODO: display author saved
 	},
 
 	render: function() {
 		return (
-			<AuthorForm
-				author={this.state.author}
-				onChange={this.setAuthorState}
-				onSave={this.saveAuthor}
-				errors={this.state.errors} />
+			<div>
+				{ this.state.redirect && <Redirect to="/authors" />}
+				<Prompt when={this.state.dirty} message="Leave without saving?" />
+				<AuthorForm
+					author={this.state.author}
+					onChange={this.setAuthorState}
+					onSave={this.saveAuthor}
+					errors={this.state.errors} />
+			</div>
 		);
 	}
 });

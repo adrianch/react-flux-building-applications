@@ -1,28 +1,17 @@
 "use strict";
 
 var React = require('react');
+var createReactClass = require('create-react-class');
+var Prompt = require('react-router-dom').Prompt;
+var withRouter = require('react-router').withRouter;
 
-var About = React.createClass({
-	statics: {
-		willTransitionTo: function(transition, params, query, callback) {
-			if (!confirm('Are you sure you want to read a page that\'s this boring?')) {
-				transition.abort();
-			} else {
-				callback();
-			}
-		},
-		
-		willTransitionFrom: function(transition, component) {
-			if (!confirm('Are you sure you want to leave a page that\'s this exciting?')) {
-				transition.abort();
-			}
-		}
-	},
+var About = createReactClass({
 	render: function () {
 		return (
 			<div>
+				<Prompt message="Are you sure you want to leave a page this exiting?" />
 				<h1>About</h1>
-				<p>
+				<div>
 					This application uses the following technologies:
 					<ul>
 						<li>React</li>
@@ -33,7 +22,7 @@ var About = React.createClass({
 						<li>Browserify</li>
 						<li>Bootstrap</li>
 					</ul>
-				</p>
+				</div>
 			</div>
 		); 
 	}
